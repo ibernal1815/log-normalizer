@@ -1,0 +1,59 @@
+# .gitignore
+# python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+
+# virtual environments
+venv/
+env/
+.venv/
+.env/
+ENV/
+
+# output files — dont commit reports or extracted IOCs to the repo
+# they could contain sensitive data from real systems
+*.json
+!tests/samples/sample_report.json
+
+# real log files — same reason, dont commit actual logs
+*.evtx
+*.log
+!tests/samples/sample_auth.log
+!tests/samples/sample_syslog.log
+
+# test/coverage artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+*.xml
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS garbage
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# misc
+*.bak
+*.swp
+*.tmp
