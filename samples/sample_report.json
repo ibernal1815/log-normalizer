@@ -1,0 +1,405 @@
+{
+  "meta": {
+    "generated_at": "2026-03-14T20:20:48.945386",
+    "total_entries": 25,
+    "total_iocs": 11
+  },
+  "ioc_summary": {
+    "ipv4": [
+      "10.0.0.5",
+      "185.220.101.5",
+      "192.168.1.50",
+      "198.51.100.42",
+      "203.0.113.10",
+      "203.0.113.99"
+    ],
+    "filepath": [
+      "/dev/pts/0",
+      "/etc/shadow",
+      "/tmp/rootkit.ko"
+    ],
+    "sha1": [
+      "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+    ],
+    "domain": [
+      "c2.malicious-domain.net"
+    ]
+  },
+  "entries": [
+    {
+      "timestamp": null,
+      "source_ip": null,
+      "destination_ip": null,
+      "user": null,
+      "event_id": null,
+      "action": null,
+      "raw": "# sample auth.log \u2014 used by tests/test_parsers.py and TUTORIAL.md",
+      "iocs": {},
+      "flags": []
+    },
+    {
+      "timestamp": null,
+      "source_ip": null,
+      "destination_ip": null,
+      "user": null,
+      "event_id": null,
+      "action": null,
+      "raw": "# represents a simulated brute force + compromise scenario",
+      "iocs": {},
+      "flags": []
+    },
+    {
+      "timestamp": null,
+      "source_ip": null,
+      "destination_ip": null,
+      "user": null,
+      "event_id": null,
+      "action": null,
+      "raw": "# IPs, hashes, and domains here are fake / documentation ranges (RFC 5737)",
+      "iocs": {},
+      "flags": []
+    },
+    {
+      "timestamp": "2026-01-15T03:20:01",
+      "source_ip": null,
+      "destination_ip": ":22",
+      "user": null,
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:20:01 webserver sshd[1800]: Server listening on 0.0.0.0 port 22",
+      "iocs": {},
+      "flags": []
+    },
+    {
+      "timestamp": "2026-01-15T03:22:05",
+      "source_ip": "198.51.100.42",
+      "destination_ip": ":54312",
+      "user": null,
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:22:05 webserver sshd[1841]: Connection from 198.51.100.42 port 54312 on 203.0.113.10 port 22",
+      "iocs": {
+        "ipv4": [
+          "198.51.100.42",
+          "203.0.113.10"
+        ]
+      },
+      "flags": []
+    },
+    {
+      "timestamp": "2026-01-15T03:22:11",
+      "source_ip": "198.51.100.42",
+      "destination_ip": ":22",
+      "user": "root",
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:22:11 webserver sshd[1842]: Failed password for root from 198.51.100.42 port 22 ssh2",
+      "iocs": {
+        "ipv4": [
+          "198.51.100.42"
+        ]
+      },
+      "flags": [
+        "Failed SSH password"
+      ]
+    },
+    {
+      "timestamp": "2026-01-15T03:22:14",
+      "source_ip": "198.51.100.42",
+      "destination_ip": ":22",
+      "user": "admin",
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:22:14 webserver sshd[1842]: Failed password for invalid user admin from 198.51.100.42 port 22 ssh2",
+      "iocs": {
+        "ipv4": [
+          "198.51.100.42"
+        ]
+      },
+      "flags": [
+        "Failed SSH password",
+        "Invalid username attempted"
+      ]
+    },
+    {
+      "timestamp": "2026-01-15T03:22:17",
+      "source_ip": "198.51.100.42",
+      "destination_ip": ":22",
+      "user": "ubuntu",
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:22:17 webserver sshd[1842]: Failed password for invalid user ubuntu from 198.51.100.42 port 22 ssh2",
+      "iocs": {
+        "ipv4": [
+          "198.51.100.42"
+        ]
+      },
+      "flags": [
+        "Failed SSH password",
+        "Invalid username attempted"
+      ]
+    },
+    {
+      "timestamp": "2026-01-15T03:22:20",
+      "source_ip": "198.51.100.42",
+      "destination_ip": ":22",
+      "user": "pi",
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:22:20 webserver sshd[1842]: Failed password for invalid user pi from 198.51.100.42 port 22 ssh2",
+      "iocs": {
+        "ipv4": [
+          "198.51.100.42"
+        ]
+      },
+      "flags": [
+        "Failed SSH password",
+        "Invalid username attempted"
+      ]
+    },
+    {
+      "timestamp": "2026-01-15T03:22:45",
+      "source_ip": "10.0.0.5",
+      "destination_ip": ":49201",
+      "user": "deploy",
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:22:45 webserver sshd[1843]: Accepted publickey for deploy from 10.0.0.5 port 49201 ssh2",
+      "iocs": {
+        "ipv4": [
+          "10.0.0.5"
+        ]
+      },
+      "flags": [
+        "Pubkey auth accepted"
+      ]
+    },
+    {
+      "timestamp": "2026-01-15T03:22:45",
+      "source_ip": null,
+      "destination_ip": null,
+      "user": "deploy",
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:22:45 webserver sshd[1843]: pam_unix(sshd:session): session opened for user deploy by (uid=0)",
+      "iocs": {},
+      "flags": []
+    },
+    {
+      "timestamp": "2026-01-15T03:23:01",
+      "source_ip": null,
+      "destination_ip": null,
+      "user": null,
+      "event_id": null,
+      "action": "sudo",
+      "raw": "Jan 15 03:23:01 webserver sudo: analyst : TTY=pts/0 ; PWD=/home/analyst ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow",
+      "iocs": {
+        "filepath": [
+          "/etc/shadow"
+        ]
+      },
+      "flags": [
+        "Sudo command ran"
+      ]
+    },
+    {
+      "timestamp": "2026-01-15T03:23:10",
+      "source_ip": null,
+      "destination_ip": null,
+      "user": "root",
+      "event_id": null,
+      "action": "sudo",
+      "raw": "Jan 15 03:23:10 webserver sudo: pam_unix(sudo:session): session opened for user root by analyst(uid=1001)",
+      "iocs": {},
+      "flags": [
+        "Root session opened"
+      ]
+    },
+    {
+      "timestamp": "2026-01-15T03:23:45",
+      "source_ip": null,
+      "destination_ip": null,
+      "user": null,
+      "event_id": null,
+      "action": "useradd",
+      "raw": "Jan 15 03:23:45 webserver useradd[2201]: new user: name=backdoor, UID=1337, GID=1337, home=/home/backdoor",
+      "iocs": {},
+      "flags": []
+    },
+    {
+      "timestamp": "2026-01-15T03:24:00",
+      "source_ip": null,
+      "destination_ip": null,
+      "user": null,
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:24:00 webserver sshd[1899]: ROOT LOGIN on /dev/pts/0 FROM 203.0.113.99",
+      "iocs": {
+        "ipv4": [
+          "203.0.113.99"
+        ],
+        "filepath": [
+          "/dev/pts/0"
+        ]
+      },
+      "flags": [
+        "Direct root login"
+      ]
+    },
+    {
+      "timestamp": "2026-01-15T03:24:30",
+      "source_ip": null,
+      "destination_ip": null,
+      "user": "root",
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:24:30 webserver sshd[1901]: pam_unix(sshd:session): session opened for user root by (uid=0)",
+      "iocs": {},
+      "flags": [
+        "Root session opened"
+      ]
+    },
+    {
+      "timestamp": "2026-01-15T03:25:01",
+      "source_ip": "185.220.101.5",
+      "destination_ip": ":51022",
+      "user": "deploy",
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:25:01 webserver sshd[1902]: Failed password for user deploy from 185.220.101.5 port 51022 ssh2",
+      "iocs": {
+        "ipv4": [
+          "185.220.101.5"
+        ]
+      },
+      "flags": [
+        "Failed SSH password"
+      ]
+    },
+    {
+      "timestamp": "2026-01-15T03:25:03",
+      "source_ip": "185.220.101.5",
+      "destination_ip": ":51022",
+      "user": "deploy",
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:25:03 webserver sshd[1902]: Failed password for user deploy from 185.220.101.5 port 51022 ssh2",
+      "iocs": {
+        "ipv4": [
+          "185.220.101.5"
+        ]
+      },
+      "flags": [
+        "Failed SSH password"
+      ]
+    },
+    {
+      "timestamp": "2026-01-15T03:25:05",
+      "source_ip": "185.220.101.5",
+      "destination_ip": ":51022",
+      "user": "deploy",
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:25:05 webserver sshd[1902]: Failed password for user deploy from 185.220.101.5 port 51022 ssh2",
+      "iocs": {
+        "ipv4": [
+          "185.220.101.5"
+        ]
+      },
+      "flags": [
+        "Failed SSH password"
+      ]
+    },
+    {
+      "timestamp": "2026-01-15T03:25:07",
+      "source_ip": "185.220.101.5",
+      "destination_ip": ":51022",
+      "user": "deploy",
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:25:07 webserver sshd[1902]: Failed password for user deploy from 185.220.101.5 port 51022 ssh2",
+      "iocs": {
+        "ipv4": [
+          "185.220.101.5"
+        ]
+      },
+      "flags": [
+        "Failed SSH password"
+      ]
+    },
+    {
+      "timestamp": "2026-01-15T03:26:00",
+      "source_ip": null,
+      "destination_ip": null,
+      "user": null,
+      "event_id": null,
+      "action": "kernel",
+      "raw": "Jan 15 03:26:00 webserver kernel: module loaded from /tmp/rootkit.ko hash da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "iocs": {
+        "sha1": [
+          "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+        ],
+        "filepath": [
+          "/tmp/rootkit.ko"
+        ]
+      },
+      "flags": []
+    },
+    {
+      "timestamp": "2026-01-15T03:26:10",
+      "source_ip": "192.168.1.50",
+      "destination_ip": ":22",
+      "user": "root",
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:26:10 webserver sshd[2001]: Accepted publickey for root from 192.168.1.50 port 22 ssh2",
+      "iocs": {
+        "ipv4": [
+          "192.168.1.50"
+        ]
+      },
+      "flags": [
+        "Pubkey auth accepted"
+      ]
+    },
+    {
+      "timestamp": "2026-01-15T03:26:10",
+      "source_ip": null,
+      "destination_ip": null,
+      "user": "root",
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:26:10 webserver sshd[2001]: pam_unix(sshd:session): session opened for user root by (uid=0)",
+      "iocs": {},
+      "flags": [
+        "Root session opened"
+      ]
+    },
+    {
+      "timestamp": "2026-01-15T03:27:01",
+      "source_ip": null,
+      "destination_ip": null,
+      "user": null,
+      "event_id": null,
+      "action": "cron",
+      "raw": "Jan 15 03:27:01 webserver cron[2100]: (root) CMD (/tmp/.hidden/beacon.sh)",
+      "iocs": {},
+      "flags": []
+    },
+    {
+      "timestamp": "2026-01-15T03:28:00",
+      "source_ip": null,
+      "destination_ip": ":443",
+      "user": "deploy",
+      "event_id": null,
+      "action": "sshd",
+      "raw": "Jan 15 03:28:00 webserver sshd[2200]: Accepted password for deploy from c2.malicious-domain.net port 443 ssh2",
+      "iocs": {
+        "domain": [
+          "c2.malicious-domain.net"
+        ]
+      },
+      "flags": []
+    }
+  ]
+}
