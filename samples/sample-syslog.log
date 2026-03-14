@@ -1,0 +1,25 @@
+# sample syslog — used by tests/test_parsers.py and TUTORIAL.md
+# represents a generic linux system with a mix of normal and suspicious activity
+Mar 10 09:00:01 fileserver systemd[1]: Started Daily apt download activities.
+Mar 10 09:00:44 fileserver kernel: EXT4-fs (sda1): mounted filesystem with ordered data mode
+Mar 10 09:01:13 fileserver systemd[1]: Started OpenSSH Server Daemon.
+Mar 10 09:02:00 fileserver rsyslogd[850]: imjournal: sd_journal_get_cursor() failed: No such file or directory
+Mar 10 09:05:22 fileserver sshd[3312]: Accepted password for jsmith from 10.10.1.55 port 43100 ssh2
+Mar 10 09:06:00 fileserver sshd[3312]: pam_unix(sshd:session): session opened for user jsmith by (uid=0)
+Mar 10 09:07:41 fileserver CRON[900]: (root) CMD (/usr/local/bin/updater.sh)
+Mar 10 09:08:00 fileserver kernel: usb 1-1.2: new high-speed USB device
+Mar 10 09:09:15 fileserver postfix/smtpd[3400]: connect from unknown[203.0.113.77]
+Mar 10 09:10:00 fileserver sshd[3399]: Invalid user oracle from 45.33.32.156 port 22
+Mar 10 09:10:03 fileserver sshd[3399]: Failed password for invalid user oracle from 45.33.32.156 port 22 ssh2
+Mar 10 09:10:06 fileserver sshd[3399]: Failed password for root from 45.33.32.156 port 22 ssh2
+Mar 10 09:10:09 fileserver sshd[3399]: Failed password for root from 45.33.32.156 port 22 ssh2
+Mar 10 09:10:12 fileserver sshd[3399]: Failed password for root from 45.33.32.156 port 22 ssh2
+Mar 10 09:10:15 fileserver sshd[3399]: Failed password for root from 45.33.32.156 port 22 ssh2
+Mar 10 09:11:00 fileserver sshd[3399]: error: maximum authentication attempts exceeded for root from 45.33.32.156 port 22 ssh2
+Mar 10 09:15:00 fileserver sudo: jsmith : TTY=pts/1 ; PWD=/home/jsmith ; USER=root ; COMMAND=/bin/bash
+Mar 10 09:16:34 fileserver kernel: sha1 file integrity: da39a3ee5e6b4b0d3255bfef95601890afd80709 /usr/bin/python3
+Mar 10 09:17:00 fileserver ftpd[4400]: connection from 203.0.113.77 (scanner.shodan.io)
+Mar 10 09:18:00 fileserver kernel: md5 mismatch on /usr/bin/sudo: d8e8fca2dc0f896fd7cb4cb0031ba249
+Mar 10 09:20:00 fileserver systemd[1]: Started cron.service.
+Mar 10 09:25:00 fileserver sshd[5000]: Accepted publickey for jsmith from 10.10.1.55 port 51234 ssh2
+Mar 10 09:30:00 fileserver postfix/smtp[5100]: connect to relay.example.com[93.184.216.34]:25
