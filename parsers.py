@@ -2,11 +2,12 @@
 # one parser per log type: evtx, syslog, auth.log
 # each one returns a list of normalized entry dicts
 #
-# the normalized schema is:
-#   timestamp, source_ip, destination_ip, user, event_id, action, raw, iocs, flags
+# normalized schema:
+# timestamp, source_ip, destination_ip, user, event_id, action, raw, iocs, flags
 #
-# i set everything to None by default so the JSON output is consistent
+# everything defaults to None so the JSON output is consistent
 # even when a field cant be extracted from a given log format
+#
 # Isaiah
 
 import re
@@ -24,7 +25,7 @@ try:
 except ImportError:
     EVTX_OK = False
 
-# syslog timestamp format - "Jan  5 03:22:11" (note the double space for single digit days)
+# syslog RFC 3164 timestamp: "Jan  5 03:22:11" or "Jan 15 03:22:11"
 SYSLOG_LINE = re.compile(
     r'^(?P<month>\w{3})\s+(?P<day>\d{1,2})\s+(?P<time>\d{2}:\d{2}:\d{2})\s+'
     r'(?P<host>\S+)\s+(?P<proc>[^\[:]+)(?:\[(?P<pid>\d+)\])?:\s*(?P<msg>.*)$'
@@ -32,7 +33,6 @@ SYSLOG_LINE = re.compile(
 
 
 def _blank_entry():
-    # helper so i dont have to type this out every time
     return {
         "timestamp":      None,
         "source_ip":      None,
@@ -47,8 +47,6 @@ def _blank_entry():
 
 
 def _check_linux_flags(msg):
-    # run the message through all our suspicious patterns
-    # returns a list of matching flag strings
     hits = []
     for pattern, label in SUSPICIOUS_LINUX_PATTERNS:
         if pattern.search(msg):
@@ -63,9 +61,8 @@ def _check_linux_flags(msg):
 def parse_evtx(filepath):
     """
     parses a windows .evtx file using python-evtx
-    each record is XML so we pull fields out by namespace + tag name
-
-    the windows event log XML namespace is a mouthful:
+    each record is XML — fields pulled out by namespace + tag name
+    windows event log XML namespace:
     http://schemas.microsoft.com/win/2004/08/events/event
     """
     if not EVTX_OK:
@@ -82,7 +79,6 @@ def parse_evtx(filepath):
                 xml_str = record.xml()
                 root = ET.fromstring(xml_str)
 
-                # grab EventID and timestamp from <System>
                 sys_el = root.find(f"{{{NS}}}System")
                 if sys_el is not None:
                     eid = sys_el.find(f"{{{NS}}}EventID")
@@ -93,7 +89,6 @@ def parse_evtx(filepath):
                     if tc is not None:
                         entry["timestamp"] = tc.get("SystemTime")
 
-                # pull key=value pairs out of <EventData>
                 ev_data = root.find(f"{{{NS}}}EventData")
                 fields = {}
                 if ev_data is not None:
@@ -103,8 +98,7 @@ def parse_evtx(filepath):
                         if name:
                             fields[name] = val
 
-                # these field names vary by event ID but these cover most cases
-                entry["user"]      = fields.get("SubjectUserName") or fields.get("TargetUserName")
+                entry["user"] = fields.get("SubjectUserName") or fields.get("TargetUserName")
                 entry["source_ip"] = fields.get("IpAddress") or fields.get("WorkstationName")
 
                 eid_str = entry["event_id"]
@@ -114,7 +108,7 @@ def parse_evtx(filepath):
                 else:
                     entry["action"] = f"Event {eid_str}"
 
-                # truncate raw XML so the JSON doesnt get insane
+                # truncate raw XML so the JSON doesnt blow up
                 entry["raw"] = xml_str[:600]
                 entry["iocs"] = extract_iocs(xml_str + " " + " ".join(fields.values()))
 
@@ -132,11 +126,10 @@ def parse_evtx(filepath):
 
 def parse_syslog(filepath):
     """
-    handles standard syslog (RFC 3164 style)
+    handles standard syslog (RFC 3164)
     format: Mon DD HH:MM:SS hostname process[pid]: message
-
-    syslog doesnt include the year in the timestamp which is annoying
-    so we just assume current year - close enough for lab purposes
+    syslog doesnt include the year so we assume current year —
+    close enough for lab purposes and recent incident logs
     """
     entries = []
     year = datetime.now().year
@@ -153,24 +146,20 @@ def parse_syslog(filepath):
             m = SYSLOG_LINE.match(line)
             if m:
                 g = m.groupdict()
-
-                # build a timestamp we can actually parse
                 ts_str = f"{g['month']} {g['day']} {year} {g['time']}"
                 try:
                     entry["timestamp"] = datetime.strptime(ts_str, "%b %d %Y %H:%M:%S").isoformat()
                 except ValueError:
-                    entry["timestamp"] = ts_str  # just store it raw if parsing fails
+                    entry["timestamp"] = ts_str
 
                 msg = g["msg"]
                 entry["action"] = g["proc"].strip()
-                entry["flags"]  = _check_linux_flags(msg)
+                entry["flags"] = _check_linux_flags(msg)
 
-                # look for source IP in "from X.X.X.X" or "rhost=X.X.X.X"
                 ip_m = re.search(r'(?:from|rhost=)\s*(\d{1,3}(?:\.\d{1,3}){3})', msg)
                 if ip_m:
                     entry["source_ip"] = ip_m.group(1)
 
-                # user is often "for user X" or just "for X" in syslog
                 user_m = re.search(r'(?:for user|user=|for)\s+(\S+)', msg, re.I)
                 if user_m:
                     entry["user"] = user_m.group(1)
@@ -188,10 +177,9 @@ def parse_syslog(filepath):
 def parse_auth(filepath):
     """
     parses linux auth.log (and /var/log/secure on RHEL-based systems)
-    structure is basically the same as syslog but the messages are
-    always auth-related so we can do more specific field extraction
-
-    i tested this against auth.log samples from my ubuntu VM in the home lab
+    same structure as syslog but messages are always auth-related
+    so we can do more specific field extraction
+    tested against auth.log samples from my ubuntu home lab VM
     """
     entries = []
     year = datetime.now().year
@@ -208,34 +196,27 @@ def parse_auth(filepath):
             m = SYSLOG_LINE.match(line)
             if m:
                 g = m.groupdict()
-
                 ts_str = f"{g['month']} {g['day']} {year} {g['time']}"
                 try:
                     entry["timestamp"] = datetime.strptime(ts_str, "%b %d %Y %H:%M:%S").isoformat()
                 except ValueError:
                     entry["timestamp"] = ts_str
 
-                msg  = g["msg"]
-                proc = g["proc"].strip()
+                msg = g["msg"]
+                entry["action"] = g["proc"].strip()
+                entry["flags"] = _check_linux_flags(msg)
 
-                entry["action"] = proc
-                entry["flags"]  = _check_linux_flags(msg)
-
-                # SSH logs the attacking IP as "from X.X.X.X"
                 ip_m = re.search(r'(?:from|rhost=)\s*(\d{1,3}(?:\.\d{1,3}){3})', msg)
                 if ip_m:
                     entry["source_ip"] = ip_m.group(1)
 
-                # auth.log has a few different user field formats
-                # "for user X", "for invalid user X", "for X" etc
+                # handles: "for user X", "for invalid user X", "for X from"
                 user_m = re.search(
                     r'for(?:\s+invalid)?\s+user\s+(\w+)|for\s+(\w+)\s+from', msg, re.I
                 )
                 if user_m:
-                    # one of the two groups will match
                     entry["user"] = user_m.group(1) or user_m.group(2)
 
-                # port number as a proxy for destination info
                 port_m = re.search(r'\bport\s+(\d+)', msg, re.I)
                 if port_m:
                     entry["destination_ip"] = f":{port_m.group(1)}"
