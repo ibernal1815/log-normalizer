@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-# main.py - entry point for the log normalizer / IOC extractor
+
+# main.py - entry point for the log normalizer / ioc extractor
 #
 # runs from the command line, calls into the other modules to do the actual work
-# started this as a one-file script but split it up when it got too long to navigate
+# started as a one-file script, split it up when it got too long to navigate
 #
 # usage:
 #   python main.py --input Security.evtx --output report.json
@@ -10,7 +11,6 @@
 #   python main.py --input syslog.log
 #
 # Isaiah
-# CIT 499 / personal home lab project
 
 import argparse
 import os
@@ -38,7 +38,8 @@ examples:
   python main.py --input syslog.log --format syslog --output iocs.json
         """
     )
-    p.add_argument("--input",  "-i", required=True, metavar="FILE",
+
+    p.add_argument("--input", "-i", required=True, metavar="FILE",
                    help="log file to parse")
     p.add_argument("--format", "-f", default="auto",
                    choices=["auto", "evtx", "syslog", "auth"],
@@ -47,18 +48,17 @@ examples:
                    help="write JSON report here (default: stdout)")
     p.add_argument("--iocs-only", action="store_true",
                    help="only output the IOC summary, skip the full entry list")
+
     return p.parse_args()
 
 
 def main():
     args = get_args()
 
-    # make sure the file actually exists before doing anything
     if not os.path.isfile(args.input):
         console.print(f"[red][!][/red] file not found: {args.input}")
         sys.exit(1)
 
-    # auto-detect or use whatever the user specified
     fmt = args.format
     if fmt == "auto":
         fmt = detect_format(args.input)
@@ -66,7 +66,6 @@ def main():
 
     console.print(f"[cyan]*[/cyan] parsing [bold]{args.input}[/bold]...")
 
-    # dispatch to the right parser
     if fmt == "evtx":
         entries = parse_evtx(args.input)
     elif fmt == "auth":
@@ -76,18 +75,14 @@ def main():
 
     console.print(f"[dim]  parsed {len(entries)} entries[/dim]")
 
-    # aggregate IOCs across all entries into one global dict
     global_iocs = {}
     for entry in entries:
         merge_iocs(global_iocs, entry.get("iocs", {}))
 
     ioc_summary = finalize_iocs(global_iocs)
 
-    # build and write the report
     report = build_report(entries, ioc_summary)
     write_report(report, output_path=args.output, iocs_only=args.iocs_only)
-
-    # print the terminal summary regardless of output mode
     print_summary(entries, global_iocs, fmt, args.input)
 
 
