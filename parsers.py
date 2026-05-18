@@ -204,7 +204,7 @@ def parse_auth(filepath):
 
                 msg = g["msg"]
                 entry["action"] = g["proc"].strip()
-                entry["flags"] = _check_linux_flags(msg)
+                entry["flags"] = _check_linux_flags(line)
 
                 ip_m = re.search(r'(?:from|rhost=)\s*(\d{1,3}(?:\.\d{1,3}){3})', msg)
                 if ip_m:
