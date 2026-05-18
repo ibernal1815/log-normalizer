@@ -88,8 +88,8 @@ Install:
     pip install rich python-evtx
 
     # try it with the included sample files
-    python main.py --input tests/samples/sample_auth.log --format auth
-    python main.py --input tests/samples/sample_syslog.log --output report.json
+    python main.py --input samples/sample_auth.log --format auth
+    python main.py --input samples/sample_syslog.log --output report.json
 
 ---
 
