@@ -1,15 +1,3 @@
-# parsers.py
-# one parser per log type: evtx, syslog, auth.log
-# each one returns a list of normalized entry dicts
-#
-# normalized schema:
-# timestamp, source_ip, destination_ip, user, event_id, action, raw, iocs, flags
-#
-# everything defaults to None so the JSON output is consistent
-# even when a field cant be extracted from a given log format
-#
-# Isaiah
-
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -30,6 +18,9 @@ SYSLOG_LINE = re.compile(
     r'^(?P<month>\w{3})\s+(?P<day>\d{1,2})\s+(?P<time>\d{2}:\d{2}:\d{2})\s+'
     r'(?P<host>\S+)\s+(?P<proc>[^\[:]+)(?:\[(?P<pid>\d+)\])?:\s*(?P<msg>.*)$'
 )
+
+# simple IPv4 validation — reused in evtx parser
+_IPV4_RE = re.compile(r'^\d{1,3}(\.\d{1,3}){3}$')
 
 
 def _blank_entry():
@@ -99,7 +90,10 @@ def parse_evtx(filepath):
                             fields[name] = val
 
                 entry["user"] = fields.get("SubjectUserName") or fields.get("TargetUserName")
-                entry["source_ip"] = fields.get("IpAddress") or fields.get("WorkstationName")
+
+                # only store source_ip if it's actually an IP, not a hostname
+                ip_val = fields.get("IpAddress")
+                entry["source_ip"] = ip_val if ip_val and _IPV4_RE.match(ip_val) else None
 
                 eid_str = entry["event_id"]
                 if eid_str in SUSPICIOUS_WIN_EVENTS:
@@ -217,9 +211,7 @@ def parse_auth(filepath):
                 if user_m:
                     entry["user"] = user_m.group(1) or user_m.group(2)
 
-                port_m = re.search(r'\bport\s+(\d+)', msg, re.I)
-                if port_m:
-                    entry["destination_ip"] = f":{port_m.group(1)}"
+                # destination_ip left as None — port alone isn't enough to populate it
 
             entry["iocs"] = extract_iocs(line)
             entries.append(entry)
