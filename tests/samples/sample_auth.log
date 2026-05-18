@@ -1,0 +1,25 @@
+# sample auth.log — used by tests/test_parsers.py and TUTORIAL.md
+# represents a simulated brute force + compromise scenario
+# IPs, hashes, and domains here are fake / documentation ranges (RFC 5737)
+Jan 15 03:20:01 webserver sshd[1800]: Server listening on 0.0.0.0 port 22
+Jan 15 03:22:05 webserver sshd[1841]: Connection from 198.51.100.42 port 54312 on 203.0.113.10 port 22
+Jan 15 03:22:11 webserver sshd[1842]: Failed password for root from 198.51.100.42 port 22 ssh2
+Jan 15 03:22:14 webserver sshd[1842]: Failed password for invalid user admin from 198.51.100.42 port 22 ssh2
+Jan 15 03:22:17 webserver sshd[1842]: Failed password for invalid user ubuntu from 198.51.100.42 port 22 ssh2
+Jan 15 03:22:20 webserver sshd[1842]: Failed password for invalid user pi from 198.51.100.42 port 22 ssh2
+Jan 15 03:22:45 webserver sshd[1843]: Accepted publickey for deploy from 10.0.0.5 port 49201 ssh2
+Jan 15 03:22:45 webserver sshd[1843]: pam_unix(sshd:session): session opened for user deploy by (uid=0)
+Jan 15 03:23:01 webserver sudo: analyst : TTY=pts/0 ; PWD=/home/analyst ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow
+Jan 15 03:23:10 webserver sudo: pam_unix(sudo:session): session opened for user root by analyst(uid=1001)
+Jan 15 03:23:45 webserver useradd[2201]: new user: name=backdoor, UID=1337, GID=1337, home=/home/backdoor
+Jan 15 03:24:00 webserver sshd[1899]: ROOT LOGIN on /dev/pts/0 FROM 203.0.113.99
+Jan 15 03:24:30 webserver sshd[1901]: pam_unix(sshd:session): session opened for user root by (uid=0)
+Jan 15 03:25:01 webserver sshd[1902]: Failed password for user deploy from 185.220.101.5 port 51022 ssh2
+Jan 15 03:25:03 webserver sshd[1902]: Failed password for user deploy from 185.220.101.5 port 51022 ssh2
+Jan 15 03:25:05 webserver sshd[1902]: Failed password for user deploy from 185.220.101.5 port 51022 ssh2
+Jan 15 03:25:07 webserver sshd[1902]: Failed password for user deploy from 185.220.101.5 port 51022 ssh2
+Jan 15 03:26:00 webserver kernel: module loaded from /tmp/rootkit.ko hash da39a3ee5e6b4b0d3255bfef95601890afd80709
+Jan 15 03:26:10 webserver sshd[2001]: Accepted publickey for root from 192.168.1.50 port 22 ssh2
+Jan 15 03:26:10 webserver sshd[2001]: pam_unix(sshd:session): session opened for user root by (uid=0)
+Jan 15 03:27:01 webserver cron[2100]: (root) CMD (/tmp/.hidden/beacon.sh)
+Jan 15 03:28:00 webserver sshd[2200]: Accepted password for deploy from c2.malicious-domain.net port 443 ssh2
